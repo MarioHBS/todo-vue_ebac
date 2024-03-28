@@ -1,47 +1,62 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
+import { reactive } from 'vue';
+
+const estado = reactive ({
+  tarefas: [
+    {
+      titulo: 'Estudar ES6',
+      finalizada: false,
+    },
+    {
+      titulo: 'Estudar SAAS',
+      finalizada: false,
+    },
+    {
+      titulo: 'Ir para a academia',
+      finalizada: true,
+    },
+  ]
+})
+
+</script> 
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+  <div class="container">
+    <header class="p-5 mb-4 mt-4 bg-light rounded-3">
+      <h1>Minhas tarefas</h1>
+      <p>
+        Você possui 7 tarefas pendentes
+      </p>
+    </header>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
+    <form>
+      <div class="row">
+        <div class="col">
+          <input type="text" placeholder="Digite aqui a descrição da tarefa" class="form-control">
+        </div>
+        <div class="col-md-1">
+          <button type="submit" class="btn btn-primary">Cadastrar</button>
+        </div>
+        <div class="col-md-2">
+          <select class="form-control" id="">
+            <option value="todas">Todas as tarefas</option>
+            <option value="finalizadas">Todas pendentes</option>
+            <option value="pendentes">Todas finalizadas</option>
+          </select>
+        </div>
+      </div>
+    </form>
 
-  <main>
-    <TheWelcome />
-  </main>
+    <ul class="list-group mt-4">
+      <li class="list-group-item" v-for="tarefa in estado.tarefas">
+        <input :checked="tarefa.finalizada" :id="tarefa.titulo" type="checkbox">
+        <label class="ms-3" :for="tarefa.titulo">{{ tarefa.titulo }}</label>
+      </li>
+    </ul>
+  </div>
+  
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-}
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
 </style>
