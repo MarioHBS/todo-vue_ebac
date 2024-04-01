@@ -3,6 +3,7 @@ import { reactive } from 'vue';
 
 const estado = reactive ({
   filtro: 'todas',
+  tarefaTemp: '',
   tarefas: [
     {
       titulo: 'Estudar ES6',
@@ -35,6 +36,15 @@ const tarefasFiltradas = () => {
   }
 }
 
+const cadastrarTarefa = () => {
+  const tarefaNova = {
+    titulo: estado.tarefaTemp,
+    finalizada: false,
+  }
+  estado.tarefaTemp = ''
+  estado.tarefas.push(tarefaNova);
+}
+
 </script> 
 
 <template>
@@ -46,10 +56,10 @@ const tarefasFiltradas = () => {
       </p>
     </header>
 
-    <form>
+    <form @submit.prevent="cadastrarTarefa">
       <div class="row">
         <div class="col">
-          <input type="text" placeholder="Digite aqui a descrição da tarefa" class="form-control">
+          <input :value="estado.tarefaTemp" @change="event => estado.tarefaTemp = event.target.value" required type="text" placeholder="Digite aqui a descrição da tarefa" class="form-control">
         </div>
         <div class="col-md-1">
           <button type="submit" class="btn btn-primary">Cadastrar</button>
