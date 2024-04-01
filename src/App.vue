@@ -2,6 +2,7 @@
 import { reactive } from 'vue';
 
 const estado = reactive ({
+  filtro: 'todas',
   tarefas: [
     {
       titulo: 'Estudar ES6',
@@ -18,6 +19,22 @@ const estado = reactive ({
   ]
 })
 
+const tarefasPendentes = () => {
+  return estado.tarefas.filter(tarefa => !tarefa.finalizada) // se for falsa
+}
+const tarefasFinalizadas = () => {
+  return estado.tarefas.filter(tarefa => tarefa.finalizada === true) // se for verdadeira
+}
+
+const tarefasFiltradas = () => {
+  const { filtro } = estado;
+  switch (filtro) {
+    case 'pendentes': return tarefasPendentes();
+    case 'finalizadas': return tarefasFinalizadas();
+    default: return estado.tarefas
+  }
+}
+
 </script> 
 
 <template>
@@ -25,7 +42,7 @@ const estado = reactive ({
     <header class="p-5 mb-4 mt-4 bg-light rounded-3">
       <h1>Minhas tarefas</h1>
       <p>
-        Você possui 7 tarefas pendentes
+        Você possui {{ tarefasPendentes().length }} tarefas pendentes
       </p>
     </header>
 
@@ -38,19 +55,19 @@ const estado = reactive ({
           <button type="submit" class="btn btn-primary">Cadastrar</button>
         </div>
         <div class="col-md-2">
-          <select class="form-control" id="">
-            <option value="todas">Todas as tarefas</option>
-            <option value="finalizadas">Todas pendentes</option>
-            <option value="pendentes">Todas finalizadas</option>
+          <select @change="event => estado.filtro = event.target.value" class="form-control" id="">
+            <option value="todas">Todas tarefas</option>
+            <option value="pendentes">Pendentes</option>
+            <option value="finalizadas">Finalizadas</option>
           </select>
         </div>
       </div>
     </form>
 
     <ul class="list-group mt-4">
-      <li class="list-group-item" v-for="tarefa in estado.tarefas">
-        <input :checked="tarefa.finalizada" :id="tarefa.titulo" type="checkbox">
-        <label :class="{ done: tarefa.finalizada === true }" class="ms-3" :for="tarefa.titulo">
+      <li class="list-group-item" v-for="tarefa in tarefasFiltradas()">
+        <input @change="event => tarefa.finalizada = event.target.checked" :checked="tarefa.finalizada" :id="tarefa.titulo" type="checkbox">
+        <label :class="{ done: tarefa.finalizada }" class="ms-3" :for="tarefa.titulo">
           {{ tarefa.titulo }}
         </label>
       </li>
@@ -60,5 +77,7 @@ const estado = reactive ({
 </template>
 
 <style scoped>
-
+.done {
+  text-decoration: line-through;
+}
 </style>
